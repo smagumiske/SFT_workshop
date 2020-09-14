@@ -1,5 +1,11 @@
 /// <reference types="cypress" />
 
+import LoginPage from "../../pageObjects/loginPage/LoginPage.js"
+import HomePage from "../../pageObjects/homePage/HomePage.js"
+
+var loginPage = new LoginPage();
+var homePage = new HomePage();
+
 describe('Make an order as user', () => {
     it('should be able to visit login page', () => {
         cy.visit('/');
@@ -7,10 +13,10 @@ describe('Make an order as user', () => {
     });
 
     it('should login as a user', () => {
-        cy.get(':nth-child(1) > .v-input__control > .v-input__slot > .v-text-field__slot > input').type('beatrice@pink.kns');
-        cy.get(':nth-child(2) > .v-input__control > .v-input__slot > .v-text-field__slot > input').type('Ribbon011');
-        cy.get('.v-btn').click();
-        cy.get('.d-flex > .v-subheader').should('contain', 'Beatrice');
+        loginPage.getEmailInputField().type('beatrice@pink.kns');
+        loginPage.getPasswordInputField().type('Ribbon011');
+        loginPage.getButton().click();
+        homePage.getRegisteredUserSubhead().should('contain', 'Beatrice');
         /*const body = {
             email: "beatrice@pink.kns",
             password: "Ribbon011"
@@ -24,9 +30,9 @@ describe('Make an order as user', () => {
             console.log(response);
         })*/
 
-        cy.get('.v-dialog > .v-card > .v-card__title > div').then($element => {
+        homePage.checkIfPopUpWindowIsVisible().then($element => {
             if ($element.is(':visible')){
-              cy.get('.gray--text > .v-btn__content > span').click();
+              homePage.closePopUpWindow().click();
             }
         });
 
