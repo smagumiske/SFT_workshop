@@ -23,25 +23,20 @@ before('Visit URL and login as a user',() => {
               homePage.closePopUpWindow().click();
             }
         });
-
     });
 });
 
 describe('Make an order as user', () => {
-    it.only('should choose a day and a provider', () => {
+    it('should choose a day and a provider', () => {
         homePage.chooseADay(4).click();       //thursday = 4
         homePage.chooseAProvider(3).click(); // gimtadienis
         cy.url().should('include', 'dishes/thursday/gimtadienis');
     });
 
-    it('should order one soup and one main dish', () => {
-        cy.get(':nth-child(2) > .layout > :nth-child(1) > .v-card__text').click();
-        var soup = cy.get(':nth-child(2) > .layout > :nth-child(1) > .v-card__text > div').invoke('text');
-        cy.get(':nth-child(4) > .layout > :nth-child(2) > .v-card__text').click();
-        var main = cy.get(':nth-child(4) > .layout > :nth-child(2) > .v-card__text > div').invoke('text');
-       // cy.get(':nth-child(2) > :nth-child(1) > .v-chip > .v-chip__content').then(($element) => {
-        //    expect($element.text()).to.include('main');
-       // });//.invoke('text').should('contain.text', main);
+    it.only('should order one soup and one main dish', () => {
+        homePage.getASoup(1).click();
+        homePage.getAMainDish(2).click();
+        homePage.checkShoppingCartIcon(1).should('be.visible');
+        homePage.checkShoppingCartIcon(2).should('be.visible');
     });
-    
 });
