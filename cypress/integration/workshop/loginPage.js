@@ -6,18 +6,18 @@ import HomePage from "../../pageObjects/homePage/HomePage.js"
 var loginPage = new LoginPage();
 var homePage = new HomePage();
 
-describe('Make an order as user', () => {
+before('Visit URL and login as a user',() => {
     it('should be able to visit login page', () => {
-        cy.visit('/');
+        cy.visit('/login-password');
         cy.url().should('include', '-password');
     });
 
-    it('should login as a user', () => {
+    it.only('should login as a user', () => {
         loginPage.getEmailInputField().type(Cypress.env('email'));
         loginPage.getPasswordInputField().type(Cypress.env('password'));
         loginPage.getButton().click();
         homePage.getRegisteredUserSubhead().should('contain', 'Beatrice');
-        /*const body = {
+    /* const body = {
             email: "beatrice@pink.kns",
             password: "Ribbon011",
             $cityId: 1,
@@ -30,8 +30,8 @@ describe('Make an order as user', () => {
             url: '/',
             body
         }).then((response) => {
-            console.log(response);
-        })*/
+            window.localStorage.setItem('jwt', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJlYXRyaWNlQHBpbmsua25zIiwiYWRtaW4iOmZhbHNlLCJpZCI6MTA2MiwiaWF0IjoxNjAwMDczOTA1LCJleHAiOjE2MDA2Nzg3MDV9.jXWOkplKeChMlKbVDVbBND2RR8Ti-HV_TmRFuvQXaJs");
+        }) */
 
         homePage.checkIfPopUpWindowIsVisible().then($element => {
             if ($element.is(':visible')){
@@ -40,14 +40,17 @@ describe('Make an order as user', () => {
         });
 
     });
-    
+});
+
+describe('Make an order as user', () => {
     it('should choose a day and a provider', () => {
-        cy.get(':nth-child(4) > .v-list__group__header > :nth-child(1) > .v-list__tile > .v-list__tile__content > .v-list__tile__title > span').click();
-        //cy.get('.v-list__group--active > .v-list__group__items > :nth-child(3) > .v-list__tile').click();
-       
-       // cy.get('#app > div.application--wrap > div > aside > div.v-list.drawer-days.v-list--dense.theme--light > div.v-list__group.v-list__group--active.drawer-days-parent > div.v-list__group__items.v-list__group__items--no-action > div:nth-child(3)').click();
-        //cy.url().should('include', 'dishes/thursday/gimtadienis');
+        homePage.chooseADay(4).click();       //thursday = 4
+        homePage.chooseAProvider(3).click(); // gimtadienis
+        cy.url().should('include', 'dishes/thursday/gimtadienis');
     });
-   
+
+    it('should order one soup and one main dish', () => {
+        
+    });
     
 });
